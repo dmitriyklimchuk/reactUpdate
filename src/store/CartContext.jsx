@@ -1,6 +1,10 @@
+// Cart context to manage cart state
+
+//TODO: check the logic for adding/removing items in the cart
+
 import { createContext, useReducer } from "react";
 
-const CartContext = createContext({
+export const CartContext = createContext({
     items: [],
     addItem: (item) => {},
     removeItem: (item) => {}
@@ -11,8 +15,13 @@ function cartReducer(state, action) {
     // update state to add meal item
     if (action.type === 'ADD_ITEM') {
         const existingItemIndex = state.items.findIndex(
-            (item) => item.id === action.item.id
+            (item) => {
+                console.log(item);
+                item.id === action.item.id
+            }
         );
+
+        console.log(state.items);
 
         const updatedItems = [...state.items];
 
@@ -31,7 +40,6 @@ function cartReducer(state, action) {
         }
 
         return {
-
             ...state,
             items: updatedItems
         }
@@ -40,16 +48,53 @@ function cartReducer(state, action) {
 
     // update state to remove meal item
     if (action.type === 'REMOVE_ITEM') {
+        const existingCartItemIndex = state.items.findIndex(
+            (item) => item.id === action.item.id
+        )
+
+        const existingCartItem = state.items[existingCartItemIndex];
+        const updatedItem = [...state.items]
+
+        if (existingCartItem.quantity === 1) {
+            updatedItem.splice(existingCartItem, 1)
+        } else {
+            const updatedIttem = {
+                ...existingCartItem,
+                quantity: existingCartItem.quantity - 1
+            }
+            updatedItem[existingCartItemIndex] = updatedItem;
+        }
+
+        return {...state,
+            items: updatedItem
+        }
+
     }
 
     return state;
 }
 
-function CartContextProvider({children}) {
-    useReducer(cartReducer, {items: []});
+export function CartContextProvider({children}) {
+    const [cart, dispatchCartAction] = useReducer(cartReducer, {items: []});
+
+    function addItem(item) {
+        dispatchCartAction({type: 'ADD_ITEM', item: item});
+    }
+
+    function removeItem(id) {
+        dispatchCartAction({type: 'REMOVE_ITEM', id})
+    }
+
+    const cartContext = {
+        items: createContext.items,
+        addItem: addItem,
+        removeItem: removeItem
+    }
+
+    console.log(cartContext);
 
     return (
-        <CartContext.Provider>{children}</CartContext.Provider>
+        <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>
     );
 }
 

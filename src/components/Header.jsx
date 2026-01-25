@@ -10,7 +10,7 @@ export default function Header() {
             </div>
             <nav>
                 <Button textOnly={true}>
-                    Your Cart
+                    Your Cart (0)
                 </Button>
             </nav>
         </header>
