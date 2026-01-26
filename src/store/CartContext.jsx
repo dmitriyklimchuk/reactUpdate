@@ -1,13 +1,11 @@
 // Cart context to manage cart state
 
-//TODO: check the logic for adding/removing items in the cart
-
 import { createContext, useReducer } from "react";
 
-export const CartContext = createContext({
+const CartContext = createContext({
     items: [],
     addItem: (item) => {},
-    removeItem: (item) => {}
+    removeItem: (id) => {}
 });
 
 // Reducer logic to handle cart actions
@@ -17,11 +15,11 @@ function cartReducer(state, action) {
         const existingItemIndex = state.items.findIndex(
             (item) => {
                 console.log(item);
-                item.id === action.item.id
+                return item.id === action.item.id
             }
         );
 
-        console.log(state.items);
+        //console.log(state.items);
 
         const updatedItems = [...state.items];
 
@@ -56,7 +54,7 @@ function cartReducer(state, action) {
         const updatedItem = [...state.items]
 
         if (existingCartItem.quantity === 1) {
-            updatedItem.splice(existingCartItem, 1)
+            updatedItem.splice(existingCartItemIndex, 1)
         } else {
             const updatedIttem = {
                 ...existingCartItem,
@@ -86,16 +84,14 @@ export function CartContextProvider({children}) {
     }
 
     const cartContext = {
-        items: createContext.items,
+        items: cart.items,
         addItem: addItem,
         removeItem: removeItem
     }
 
-    console.log(cartContext);
+    //console.log(cartContext);
 
-    return (
-        <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>
-    );
+    return <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>
 }
 
 export default CartContext;
