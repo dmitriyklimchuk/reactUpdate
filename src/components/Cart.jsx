@@ -23,7 +23,17 @@ export default function Cart() {
         <Modal className="cart" open={userProgressCtx.progress}>
             <h2>Your Cart</h2>
             <ul>
-                {cartCtx.items.map((item) => <CartItem key={item.id} {...item} /> )}
+                {cartCtx.items.map((item) => (
+                    <CartItem 
+                        key={item.id} 
+                        //{...item} 
+                        name = {item.name}
+                        quantity = {item.quantity}
+                        price = {item.price}    
+                        onIncrease={() => cartCtx.addItem(item)}
+                        onDecrease={() => cartCtx.removeItem(item.id)}
+                    />
+                ) )}
             </ul>
             <p className="cart-total">{cartTotal}</p>
             <div className="modal-actions">

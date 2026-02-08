@@ -1,13 +1,19 @@
 import { currencyFormatter } from '../utils/formatting';
 
-export default function CartItem({name, quantity, price}) {
+export default function CartItem({
+    name, 
+    quantity,
+    price,
+    onIncrease,
+    onDecrease }) 
+    {
     return (
         <li className="cart-tem">
             <p>{name} - {quantity} * {currencyFormatter.format(price)}</p>
             <div className="cart-item-actions">
-                <button>-</button>
+                <button onClick={onDecrease}>-</button>
                 <span>{quantity}</span>
-                <button>+</button>
+                <button onClick={onIncrease}>+</button>
             </div>
         </li>
     )
